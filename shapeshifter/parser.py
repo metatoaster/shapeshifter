@@ -1,10 +1,14 @@
 class Parser(object):
 
     def __init__(self, filename):
-        f = open(filename)
+        self.filename = filename
+        self.structure = {}
+        self._open()
+
+    def _open(self):
+        f = open(self.filename)
         self.lines = f.readlines()
         f.close()
-        self.structure = {}
 
     def parse(self):
         header = ''
