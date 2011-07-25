@@ -5,4 +5,4 @@ p.parse()
 
 from pprint import pprint as pp
 
-pp(p.structure)
+pp(p)

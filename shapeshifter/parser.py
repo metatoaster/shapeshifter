@@ -1,16 +1,15 @@
-class Parser(object):
+class Parser(dict):
 
     def __init__(self, filename):
         self.filename = filename
-        self.structure = {}
-        self._open()
 
-    def _open(self):
+    def _getlines(self):
         f = open(self.filename)
         self.lines = f.readlines()
         f.close()
 
     def parse(self):
+        self._getlines()
         header = ''
         for line in self.lines:
             line = line.strip('\r\n')
@@ -19,5 +18,4 @@ class Parser(object):
             if line[0] == '#':
                 header = line[1:]
                 continue
-            self.structure[header] = line
-
+            self[header] = line
