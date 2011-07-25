@@ -66,10 +66,10 @@ class BaseConfig(object):
         return _settings[key]
 
     def get(self, key, default=None):
-        if key in self._valid_keys and key in self._settings:
-            return self._settings[key]
+        if key in self._valid_keys:
+            return self._settings.get(key, default)
         else:
-            return default
+            return None
 
 
 class AppConfig(BaseConfig):
