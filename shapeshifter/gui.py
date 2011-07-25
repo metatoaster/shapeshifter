@@ -11,7 +11,15 @@ from log import logger
 from parser import Parser
 
 
-class ParserDialog(Frame):
+class RunDialog(Toplevel):
+
+    def parserFrame(self, parsers):
+        # we can deal with duplicated references later.
+        self.parsers = parsers
+        self.frame = ColumnSelectFrame(self, parsers=parsers)
+
+
+class ColumnSelectFrame(Frame):
 
     def __init__(self, master=None, parsers=None):
         Frame.__init__(self, master)
@@ -49,7 +57,17 @@ class ParserDialog(Frame):
             )
             c.pack()
 
-        self.createCloseButton()
+        self.createContinueButton()
+
+    def createContinueButton(self):
+        self.close = Button(self,
+            text='Continue',
+            command=self.master.destroy,
+            width='10',
+        )
+        self.close.pack({
+            'side': 'right',
+        })
 
     def createNothingLabel(self):
         self.label = Label(self,
@@ -165,9 +183,9 @@ class Application(Frame):
                 continue
             self.parsers.append(p)
 
-        rundialog = Toplevel()
+        rundialog = RunDialog()
         center(rundialog)
-        parserdialog = ParserDialog(rundialog, parsers=self.parsers)
+        rundialog.parserFrame(self.parsers)
         rundialog.focus_set()
         rundialog.grab_set()
         rundialog.transient(self)
