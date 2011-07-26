@@ -9,7 +9,7 @@ import tkSimpleDialog
 
 from settings import AppConfig
 from log import logger
-from parser import ParserList, ParserDict
+from reader import ParserList, ParserDict
 
 
 class RunDialog(Toplevel):
