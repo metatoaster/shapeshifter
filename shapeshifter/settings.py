@@ -6,7 +6,7 @@ from log import logger
 APPNAME = 'shapeshifter'
 
 CONFIG_DEFAULT = '%s.cfg' % APPNAME
-CONFIG_USER = os.path.expanduser('~/.%s.cfg' % APPNAME)
+CONFIG_USER = os.path.expanduser(os.path.join('~', '.%s.cfg') % APPNAME)
 
 
 class BaseConfig(object):
@@ -83,7 +83,7 @@ class BaseConfig(object):
             value = self._settings.get(key, default)
             if self._validate(key, value):
                 return value
-            logger.info('"%s" not of expected type (%s)', key)
+            logger.info('"%s" not of expected type', key)
             return None
         #logger.info('"%s" not a valid key', key)
         return None

@@ -1,3 +1,4 @@
+import re
 from os.path import basename, dirname, exists
 from sys import exit
 
@@ -327,12 +328,17 @@ class Application(Frame):
             initialdir=self.config.get('cwd'),
         )
 
+        # XXX workaround windows version bug
+        if isinstance(filenames, basestring) and filenames[0] == '{':
+            filenames = re.findall('\{(.*?)\}', filenames)
+
         if filenames:
             cwd = dirname(filenames[0])
             self.config['cwd'] = cwd
 
         lb = self.filenameframe.filenames
         lb.delete(0, END)
+
         for i in filenames:
             lb.insert(END, i)
 
