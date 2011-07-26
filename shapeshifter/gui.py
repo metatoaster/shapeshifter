@@ -155,10 +155,11 @@ class ColumnSelectFrame(Frame):
             return
 
         self.columns = self.newCheckboxValues()
+        keys = sorted(self.columns.keys())
         # XXX apply settings here
         for c in self.config.get('columns', []):
-            self.columns[c].set(1)
-        keys = sorted(self.columns.keys())
+            if c in keys:
+                self.columns[c].set(1)
 
         self.checkboxes = []
         for k in keys:
