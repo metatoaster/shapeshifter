@@ -1,9 +1,10 @@
 README.txt
+setup.cfg
 setup.py
 shapeshifter/__init__.py
 shapeshifter/gui.py
 shapeshifter/log.py
-shapeshifter/parser.py
+shapeshifter/reader.py
 shapeshifter/settings.py
 shapeshifter.egg-info/PKG-INFO
 shapeshifter.egg-info/SOURCES.txt

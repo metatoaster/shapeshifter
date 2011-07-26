@@ -1,3 +1,9 @@
+Version 0.2
+===========
+
+- Avoid naming conflicts.
+
+
 Version 0.1
 ===========
 
