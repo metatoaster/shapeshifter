@@ -1,0 +1,15 @@
+README.txt
+setup.py
+shapeshifter/__init__.py
+shapeshifter/gui.py
+shapeshifter/log.py
+shapeshifter/parser.py
+shapeshifter/settings.py
+shapeshifter.egg-info/PKG-INFO
+shapeshifter.egg-info/SOURCES.txt
+shapeshifter.egg-info/dependency_links.txt
+shapeshifter.egg-info/entry_points.txt
+shapeshifter.egg-info/namespace_packages.txt
+shapeshifter.egg-info/not-zip-safe
+shapeshifter.egg-info/requires.txt
+shapeshifter.egg-info/top_level.txt

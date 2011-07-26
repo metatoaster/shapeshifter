@@ -1,0 +1,22 @@
+Metadata-Version: 1.0
+Name: shapeshifter
+Version: 0.1
+Summary: Shapeshifter (?) Parser?
+Home-page: http://metatoaster.com/
+Author: Tommy Yu
+Author-email: y@metatoaster.com
+License: GPL
+Description: A simple text entry to CSV converter; based on a file named shapeshifter.
+        
+        This also serve as a simple GUI app for Python.
+        
+        Version 0.1
+        ===========
+        
+        - Initial release
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: X11 Applications
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Programming Language :: Python
