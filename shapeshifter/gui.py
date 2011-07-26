@@ -1,14 +1,15 @@
-from os.path import basename, dirname
+from os.path import basename, dirname, exists
 from sys import exit
 
 from Tkinter import *
 
+import tkMessageBox
 import tkFileDialog
 import tkSimpleDialog
 
 from settings import AppConfig
 from log import logger
-from parser import Parser
+from parser import ParserList, ParserDict
 
 
 class RunDialog(Toplevel):
@@ -16,21 +17,131 @@ class RunDialog(Toplevel):
     def parserFrame(self, parsers):
         # we can deal with duplicated references later.
         self.parsers = parsers
-        self.frame = ColumnSelectFrame(self, parsers=parsers)
+        self.config = AppConfig()
+        self.frame = ColumnSelectFrame(self)
+
+    def endParserFrame(self):
+        # triggers when continue was triggered for the above
+        results = [k for k, v in self.frame.columns.iteritems() if v.get()]
+        self.config['columns'] = results
+        self.columns = results
+        self.frame.destroy()
+        self.frame = DataDisplayFrame(self)
+        self.frame.pack(fill=BOTH, expand=1)
+
+
+class DataDisplayFrame(Frame):
+
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.config = AppConfig()
+        self.pack()
+        self.createWidgets()
+
+    def createOutput(self):
+        def csvline(items):
+            return ','.join(['"%s"' % s for s in items])
+        lines = []
+        columns = self.master.columns
+        header = csvline(columns)
+        lines.append(header)
+        for p in self.master.parsers:
+            line = csvline([p.get(c, '') for c in columns])
+            lines.append(line)
+
+        return '\n'.join(lines)
+
+    def createWidgets(self):
+        logger.info('Display data')
+        self.createTextArea()
+        self.createButtons()
+        self.output = self.createOutput()
+
+        self.textarea.insert('1.0', self.output)
+        self.textarea.config(state=DISABLED)
+
+    def createTextArea(self):
+        self.textframe = Frame(self)
+
+        self.scrollbar = Scrollbar(self.textframe)
+        self.scrollbar.pack(side=RIGHT, fill=Y)
+
+        self.textarea = Text(self.textframe,
+            width='80',
+            height='25',
+        )
+        self.textarea.pack(side=TOP, fill=BOTH, expand=1,)
+
+        self.textframe.pack(fill=BOTH, expand=1)
+
+    def createButtons(self):
+        self.close = Button(self,
+            text='Close',
+            command=self.master.destroy,
+            width='10',
+        )
+        self.close.pack({
+            'side': 'right',
+        })
+
+        self.save = Button(self,
+            text='Save...',
+            command=self.dialogSaveCSV,
+            width='10',
+        )
+        self.save.pack({
+            'side': 'right',
+        })
+
+    def dialogSaveCSV(self):
+        formats = [
+            ('Comma Seperated Value file', '*.csv'),
+            ('All files', '*.*'),
+        ]
+
+        filename = tkFileDialog.asksaveasfilename(
+            filetypes=formats,
+            initialdir=self.config.get('cwd'),
+        )
+
+        if filename:
+            self.saveoutput(filename)
+
+    def saveoutput(self, filename):
+        # looks like this is built in...
+        # if exists(filename):
+        #     result = tkMessageBox.askyesno("File exists", 
+        #         'Overwrite the file "%s"?' % filename)
+        #     if not result:
+        #         return
+
+        try:
+            f = open(filename, 'w')
+        except IOError:
+            logger.error('Cannot open "%s" for writing', filename)
+            return
+
+        try:
+            f.write(self.output)
+        except:
+            logger.error('Failed to write to "%s"', filename)
+        finally:
+            f.close()
+
+        logger.info('Wrote result to "%s"', filename)
 
 
 class ColumnSelectFrame(Frame):
 
-    def __init__(self, master=None, parsers=None):
+    def __init__(self, master=None):
         Frame.__init__(self, master)
-        self.parsers = parsers
         self.config = AppConfig()
         self.pack()
         self.createWidgets()
 
     def newCheckboxValues(self):
         result = {}
-        for p in self.parsers:
+        for p in self.master.parsers:
             result.update(p)
         for i in result.keys():
             result[i] = IntVar()
@@ -38,13 +149,15 @@ class ColumnSelectFrame(Frame):
 
     def createWidgets(self):
         logger.info('creating parser widgets')
-        if not self.parsers:
+        if not self.master.parsers:
             self.createNothingLabel()
             self.createCloseButton()
             return
 
         self.columns = self.newCheckboxValues()
         # XXX apply settings here
+        for c in self.config.get('columns', []):
+            self.columns[c].set(1)
         keys = sorted(self.columns.keys())
 
         self.checkboxes = []
@@ -62,7 +175,7 @@ class ColumnSelectFrame(Frame):
     def createContinueButton(self):
         self.close = Button(self,
             text='Continue',
-            command=self.master.destroy,
+            command=self.master.endParserFrame,
             width='10',
         )
         self.close.pack({
@@ -174,14 +287,15 @@ class Application(Frame):
         filenames = self.filenames
         logger.info('%d file(s) to parse', len(filenames))
         for fn in filenames:
-            p = Parser(fn)
+            p = ParserList(fn)
+            logger.info('parsing "%s"', fn)
             try:
                 p.parse()
             except:
                 # skip this file
-                logger.error('Failed to parse file "%s"', fn)
+                logger.exception('Failed to parse file "%s"', fn)
                 continue
-            self.parsers.append(p)
+            self.parsers.extend(p)
 
         rundialog = RunDialog()
         center(rundialog)

@@ -11,7 +11,7 @@ CONFIG_USER = os.path.expanduser('~/.%s.cfg' % APPNAME)
 
 class BaseConfig(object):
 
-    _valid_keys = []
+    _valid_keys = {}
 
     def _read(self, filename):
         result = None
@@ -34,6 +34,8 @@ class BaseConfig(object):
 
         if isinstance(result, dict):
             self._settings.update(result)
+            # XXX filter out values that do not validate against expected
+            # type
             return True
         else:
             logger.info('Invalid config in config "%s"', filename)
@@ -58,23 +60,32 @@ class BaseConfig(object):
         finally:
             f.close()
 
+    def _validate(self, key, value):
+        return (key in self._valid_keys.keys() and 
+                isinstance(value, self._valid_keys[key]))
+
     def __setitem__(self, key, value):
-        if key in self._valid_keys:
+        if self._validate(key, value):
             self._settings[key] = value
 
     def __getitem__(self, key):
         return _settings[key]
 
     def get(self, key, default=None):
-        if key in self._valid_keys:
-            return self._settings.get(key, default)
-        else:
+        if key in self._valid_keys.keys():
+            value = self._settings.get(key, default)
+            if self._validate(key, value):
+                return value
+            logger.info('"%s" not of expected type (%s)', key)
             return None
+        #logger.info('"%s" not a valid key', key)
+        return None
 
 
 class AppConfig(BaseConfig):
 
-    _valid_keys = [
-        'cwd',
-    ]
+    _valid_keys = {
+        'cwd': basestring,
+        'columns': list,
+    }
     _settings = {}
