@@ -249,7 +249,7 @@ class Application(Frame):
         self.hi = Button(self,
             text='Open...',
             command=self.dialogFilenames,
-            width='10',
+            width='12',
         )
         self.hi.pack({
             'side': 'left',
@@ -258,16 +258,25 @@ class Application(Frame):
         self.hi = Button(self,
             text='Run...',
             command=self.dialogRun,
-            width='10',
+            width='12',
         )
         self.hi.pack({
+            'side': 'left',
+        })
+
+        self.reset = Button(self,
+            text='Reset Settings',
+            command=self.resetSettings,
+            width='12',
+        )
+        self.reset.pack({
             'side': 'left',
         })
 
         self.quit = Button(self,
             text='Quit',
             command=self.quit,
-            width='10',
+            width='12',
         )
         self.quit.pack({
             'side': 'right',
@@ -326,6 +335,9 @@ class Application(Frame):
         lb.delete(0, END)
         for i in filenames:
             lb.insert(END, i)
+
+    def resetSettings(self):
+        self.config.delete()
 
     def quit(self):
         self.config.write()

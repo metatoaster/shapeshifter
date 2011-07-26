@@ -40,6 +40,13 @@ class BaseConfig(object):
         else:
             logger.info('Invalid config in config "%s"', filename)
 
+    def delete(self):
+        self._settings.clear()
+        if os.path.exists(CONFIG_USER):
+            os.unlink(CONFIG_USER)
+            logger.info('Removed user config "%s"', CONFIG_USER)
+        self.read()
+
     def read(self):
         self._settings.clear()
         self._read(CONFIG_DEFAULT)
