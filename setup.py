@@ -31,4 +31,17 @@ setup(
     entry_points="""
     # -*- Entry points: -*-
     """,
-    )
+    windows=[
+        {
+            'script': 'yourmodule.py',
+            'icon_resources': [(1, 'moduleicon.ico')]
+        }
+    ],
+    zipfile=None,
+    options={
+        'py2exe': {
+            'includes': ['tkinter'],
+            'bundle_files': 1,
+        }
+    }
+)
