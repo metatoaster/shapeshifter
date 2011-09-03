@@ -133,7 +133,7 @@ class DataDisplayFrame(Frame):
         logger.info('Wrote result to "%s"', filename)
 
 
-class ColumnSelectFrame(Frame):
+class ColumnSelectSubFrame(Frame):
 
     def __init__(self, master=None):
         Frame.__init__(self, master)
@@ -141,21 +141,19 @@ class ColumnSelectFrame(Frame):
         self.pack()
         self.createWidgets()
 
+    @property
+    def parsers(self):
+        return self.master.master.parsers
+
     def newCheckboxValues(self):
         result = {}
-        for p in self.master.parsers:
+        for p in self.parsers:
             result.update(p)
         for i in result.keys():
             result[i] = IntVar()
         return result
 
     def createWidgets(self):
-        logger.info('creating parser widgets')
-
-        if not self.master.parsers:
-            self.createNothingLabel()
-            self.createCloseButton()
-            return
 
         self.columns = self.newCheckboxValues()
         keys = sorted(self.columns.keys())
@@ -174,6 +172,28 @@ class ColumnSelectFrame(Frame):
             )
             c.pack()
 
+
+class ColumnSelectFrame(Frame):
+
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.config = AppConfig()
+        self.pack()
+        self.createWidgets()
+
+    @property
+    def columns(self):
+        return self.selectframe.columns
+
+    def createWidgets(self):
+        logger.info('creating parser widgets')
+        if not self.master.parsers:
+            self.createNothingLabel()
+            self.createCloseButton()
+            return
+
+        self.selectframe = ColumnSelectSubFrame(self)
+        self.selectframe.pack(fill=BOTH, expand=1)
         self.createContinueButton()
 
     def createContinueButton(self):
