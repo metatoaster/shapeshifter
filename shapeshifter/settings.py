@@ -1,7 +1,7 @@
 import os
 import json
 
-from log import logger
+from shapeshifter.log import logger
 
 APPNAME = 'shapeshifter'
 

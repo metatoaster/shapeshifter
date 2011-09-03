@@ -1,6 +1,9 @@
+MANIFEST.in
 README.txt
 setup.cfg
 setup.py
+docs/HISTORY.txt
+scripts/run.py
 shapeshifter/__init__.py
 shapeshifter/gui.py
 shapeshifter/log.py

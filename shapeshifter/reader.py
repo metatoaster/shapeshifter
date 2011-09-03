@@ -2,7 +2,7 @@
 Customized data types
 """
 
-from log import logger
+from shapeshifter.log import logger
 
 
 class ParserDict(dict):

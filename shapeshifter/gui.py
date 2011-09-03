@@ -8,9 +8,9 @@ import tkMessageBox
 import tkFileDialog
 import tkSimpleDialog
 
-from settings import AppConfig
-from log import logger
-from reader import ParserList, ParserDict
+from shapeshifter.settings import AppConfig
+from shapeshifter.log import logger
+from shapeshifter.reader import ParserList, ParserDict
 
 
 class RunDialog(Toplevel):
@@ -360,10 +360,13 @@ def center(window):
     window.geometry("+%d+%d" % (xc, yc))
     window.deiconify()    
 
-if __name__ == '__main__':
+def run():
     root = Tk()
     center(root)
     app = Application(master=root)
     app.master.title('Format Extractor')
     app.mainloop()
     root.destroy()
+
+if __name__ == '__main__':
+    run()

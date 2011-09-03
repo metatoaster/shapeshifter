@@ -1,7 +1,12 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.2'
+try:
+    import py2exe
+except ImportError:
+    pass
+
+version = '0.3'
 
 setup(
     name='shapeshifter',
@@ -33,14 +38,13 @@ setup(
     """,
     windows=[
         {
-            'script': 'yourmodule.py',
-            'icon_resources': [(1, 'moduleicon.ico')]
+            'script': os.path.join('scripts', 'run.py',),
         }
     ],
     zipfile=None,
     options={
         'py2exe': {
-            'includes': ['tkinter'],
+            'includes': ['Tkinter'],
             'bundle_files': 1,
         }
     }
