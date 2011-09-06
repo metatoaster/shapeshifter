@@ -1,5 +1,6 @@
 recursive-include shapeshifter *
 recursive-include docs *
 recursive-include scripts *
+include buildexe.py
 global-exclude *pyc
 global-exclude .*swp
