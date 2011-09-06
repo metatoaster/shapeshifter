@@ -23,9 +23,9 @@ class RunDialog(Toplevel):
 
     def endParserFrame(self):
         # triggers when continue was triggered for the above
-        results = [k for k, v in self.frame.columns.iteritems() if v.get()]
-        self.config['columns'] = results
-        self.columns = results
+        columns = self.frame.columns
+        self.config['columns'] = columns
+        self.columns = columns
         self.frame.destroy()
         self.frame = DataDisplayFrame(self)
         self.frame.pack(fill=BOTH, expand=1)
@@ -140,37 +140,94 @@ class ColumnSelectSubFrame(Frame):
         self.config = AppConfig()
         self.pack()
         self.createWidgets()
+        self.populateSelections()
 
     @property
     def parsers(self):
         return self.master.master.parsers
 
-    def newCheckboxValues(self):
+    @property
+    def columns(self):
+        return self.lbSelect.get(0, END)
+
+    def _updateSelection(self, selected):
+        self.lbSelect.delete(0, END)
+        for i in selected:
+            self.lbSelect.insert(END, i)
+
+    def addSelection(self):
+        selected = set(self.lbSelect.get(0, END))
+        selected = sorted(list(selected.union(
+            set([self.lbAll.get(i) for i in self.lbAll.curselection()]))
+        ))
+        self._updateSelection(selected)
+
+    def removeSelection(self):
+        selected = set(self.lbSelect.get(0, END))
+        selected = sorted(list(selected.difference([self.lbSelect.get(i)
+            for i in self.lbSelect.curselection()])))
+        self._updateSelection(selected)
+
+    def populateSelections(self):
+        # grab the columns from each of the completed parsers
         result = {}
         for p in self.parsers:
             result.update(p)
-        for i in result.keys():
-            result[i] = IntVar()
-        return result
+
+        available = sorted(result.keys())
+        previous = sorted(self.config.get('columns', []))
+
+        for i in available:
+            self.lbAll.insert(END, i)
+
+        for i in previous:
+            self.lbSelect.insert(END, i)
 
     def createWidgets(self):
 
-        self.columns = self.newCheckboxValues()
-        keys = sorted(self.columns.keys())
-        # XXX apply settings here
-        for c in self.config.get('columns', []):
-            if c in keys:
-                self.columns[c].set(1)
+        # List of available selction
+        self.scrollbarAll = Scrollbar(self)
 
-        self.checkboxes = []
-        for k in keys:
-            c = Checkbutton(self,
-                text=k,
-                variable=self.columns[k],
-                width='20',
-                anchor=W,
-            )
-            c.pack()
+        self.lbAll = Listbox(self,
+            height='10',
+            width='30',
+            selectmode=EXTENDED,
+            yscrollcommand=self.scrollbarAll.set,
+        )
+        self.lbAll.pack(side=LEFT, expand=1)
+        self.scrollbarAll.pack(side=LEFT, fill=Y)
+
+        # List of selected selction
+        self.scrollbarSelect = Scrollbar(self)
+        self.scrollbarSelect.pack(side=RIGHT, fill=Y)
+        
+        self.lbSelect = Listbox(self,
+            height='10',
+            width='30',
+            selectmode=EXTENDED,
+            yscrollcommand=self.scrollbarSelect.set,
+        )
+        self.lbSelect.pack(side=RIGHT, expand=1)
+
+
+        # buttons
+        self.buttonFrame = Frame(self)
+
+        self.btnAdd = Button(self.buttonFrame,
+            text='Add >>',
+            command=self.addSelection,
+            width='10',
+        )
+        self.btnAdd.pack(anchor=CENTER)
+
+        self.btnRem = Button(self.buttonFrame,
+            text='<< Remove',
+            command=self.removeSelection,
+            width='10',
+        )
+        self.btnRem.pack(anchor=CENTER)
+
+        self.buttonFrame.pack(side=RIGHT)
 
 
 class ColumnSelectFrame(Frame):
