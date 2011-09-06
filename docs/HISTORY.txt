@@ -1,3 +1,9 @@
+Version 0.4
+===========
+
+- Better packaging.
+- Minor bug fixes.
+
 Version 0.3
 ===========
 

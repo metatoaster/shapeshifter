@@ -1,0 +1,5 @@
+recursive-include shapeshifter *
+recursive-include docs *
+recursive-include scripts *
+global-exclude *pyc
+global-exclude .*swp
