@@ -36,8 +36,8 @@ class DataDisplayFrame(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.config = AppConfig()
-        self.pack()
         self.createWidgets()
+        self.pack(fill=BOTH, expand=1)
 
     def createOutput(self):
         def csvline(items):
@@ -72,6 +72,7 @@ class DataDisplayFrame(Frame):
             height='25',
             yscrollcommand=self.scrollbar.set,
         )
+        self.scrollbar.config(command=self.textarea.yview)
         self.textarea.pack(side=TOP, fill=BOTH, expand=1,)
 
         self.textframe.pack(fill=BOTH, expand=1)
@@ -148,7 +149,7 @@ class ColumnSelectSubFrame(Frame):
 
     @property
     def columns(self):
-        return self.lbSelect.get(0, END)
+        return list(self.lbSelect.get(0, END))
 
     def _updateSelection(self, selected):
         self.lbSelect.delete(0, END)
@@ -190,28 +191,27 @@ class ColumnSelectSubFrame(Frame):
 
         # List of available selction
         self.scrollbarAll = Scrollbar(self)
-
         self.lbAll = Listbox(self,
             height='10',
             width='30',
             selectmode=EXTENDED,
             yscrollcommand=self.scrollbarAll.set,
         )
-        self.lbAll.pack(side=LEFT, expand=1)
+        self.scrollbarAll.config(command=self.lbAll.yview)
+        self.lbAll.pack(side=LEFT, fill=BOTH, expand=1)
         self.scrollbarAll.pack(side=LEFT, fill=Y)
 
         # List of selected selction
         self.scrollbarSelect = Scrollbar(self)
-        self.scrollbarSelect.pack(side=RIGHT, fill=Y)
-        
         self.lbSelect = Listbox(self,
             height='10',
             width='30',
             selectmode=EXTENDED,
             yscrollcommand=self.scrollbarSelect.set,
         )
-        self.lbSelect.pack(side=RIGHT, expand=1)
-
+        self.scrollbarSelect.config(command=self.lbSelect.yview)
+        self.scrollbarSelect.pack(side=RIGHT, fill=Y)
+        self.lbSelect.pack(side=RIGHT, fill=BOTH, expand=1)
 
         # buttons
         self.buttonFrame = Frame(self)
@@ -238,7 +238,7 @@ class ColumnSelectFrame(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.config = AppConfig()
-        self.pack()
+        self.pack(fill=BOTH, expand=1)
         self.createWidgets()
 
     @property
@@ -302,6 +302,7 @@ class FilenameFrame(Frame):
             width='30',
             yscrollcommand=self.scrollbar.set
         )
+        self.scrollbar.config(command=self.filenames.yview)
         self.filenames.pack(fill=BOTH, expand=1)
 
 
