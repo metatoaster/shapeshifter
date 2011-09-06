@@ -175,7 +175,10 @@ class ColumnSelectSubFrame(Frame):
             result.update(p)
 
         available = sorted(result.keys())
-        previous = sorted(self.config.get('columns', []))
+
+        raw = set(self.config.get('columns', []))
+        raw = raw.intersection(set(available))
+        previous = sorted(list(raw))
 
         for i in available:
             self.lbAll.insert(END, i)
