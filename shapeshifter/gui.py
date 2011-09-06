@@ -70,6 +70,7 @@ class DataDisplayFrame(Frame):
         self.textarea = Text(self.textframe,
             width='80',
             height='25',
+            yscrollcommand=self.scrollbar.set,
         )
         self.textarea.pack(side=TOP, fill=BOTH, expand=1,)
 
@@ -150,6 +151,7 @@ class ColumnSelectFrame(Frame):
 
     def createWidgets(self):
         logger.info('creating parser widgets')
+
         if not self.master.parsers:
             self.createNothingLabel()
             self.createCloseButton()
@@ -216,7 +218,6 @@ class FilenameFrame(Frame):
         self.scrollbar.pack(side=RIGHT, fill=Y)
 
         self.filenames = Listbox(self,
-            bg='white',
             height='10',
             width='30',
             yscrollcommand=self.scrollbar.set
@@ -247,21 +248,21 @@ class Application(Frame):
         self.filenameframe = FilenameFrame(self)
         self.filenameframe.pack(fill=BOTH, expand=1)
 
-        self.hi = Button(self,
+        self.btnRun = Button(self,
             text='Open...',
             command=self.dialogFilenames,
             width='12',
         )
-        self.hi.pack({
+        self.btnRun.pack({
             'side': 'left',
         })
 
-        self.hi = Button(self,
+        self.btnRun = Button(self,
             text='Run...',
             command=self.dialogRun,
             width='12',
         )
-        self.hi.pack({
+        self.btnRun.pack({
             'side': 'left',
         })
 
