@@ -1,5 +1,4 @@
 MANIFEST.in
-README.txt
 buildexe.py
 setup.cfg
 setup.py
