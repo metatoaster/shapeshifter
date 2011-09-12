@@ -1,4 +1,3 @@
-import re
 from os.path import basename, dirname, exists
 from sys import exit
 
@@ -411,8 +410,8 @@ class Application(Frame):
         )
 
         # XXX workaround windows version bug
-        if isinstance(filenames, basestring) and filenames[0] == '{':
-            filenames = re.findall('\{(.*?)\}', filenames)
+        if isinstance(filenames, basestring):
+            filenames = self.tk.splitlist(filenames)
 
         if filenames:
             cwd = dirname(filenames[0])
