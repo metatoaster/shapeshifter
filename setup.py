@@ -6,7 +6,7 @@ try:
 except ImportError:
     pass
 
-version = '0.6'
+version = '0.7'
 
 setup(
     name='shapeshifter',
