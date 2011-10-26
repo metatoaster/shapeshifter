@@ -101,13 +101,16 @@ class DataDisplayFrame(Frame):
             ('All files', '*.*'),
         ]
 
+        csvfile = self.config.get('csvfile', None)
         filename = tkFileDialog.asksaveasfilename(
+            initialfile=csvfile,
             filetypes=formats,
             initialdir=self.config.get('cwd'),
         )
 
         if filename:
             self.saveoutput(filename)
+            self.config['csvfile'] = basename(filename)
 
     def saveoutput(self, filename):
         # looks like this is built in...
@@ -370,6 +373,11 @@ class Application(Frame):
             expand=1,
         )
 
+        filenames = self.config.get('lastparsed', [])
+        lb = self.filenameframe.filenames
+        for i in filenames:
+            lb.insert(END, i)
+
     @property
     def filenames(self):
         return self.filenameframe.filenames.get(0, END)
@@ -377,6 +385,7 @@ class Application(Frame):
     def dialogRun(self):
         self.parsers = []
         filenames = self.filenames
+        self.config['lastparsed'] = list(filenames)
         logger.info('%d file(s) to parse', len(filenames))
         for fn in filenames:
             p = ParserList(fn)

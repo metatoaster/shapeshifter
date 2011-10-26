@@ -93,6 +93,7 @@ class AppConfig(BaseConfig):
 
     _valid_keys = {
         'cwd': basestring,
+        'lastparsed': list,
         'columns': list,
     }
     _settings = {}
