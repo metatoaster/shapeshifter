@@ -151,7 +151,8 @@ class ColumnSelectSubFrame(Frame):
 
     @property
     def columns(self):
-        return list(self.lbSelect.get(0, END))
+        return [i for i in self.original if i in 
+                list(self.lbSelect.get(0, END))]
 
     def _updateSelection(self, selected):
         self.lbSelect.delete(0, END)
@@ -177,7 +178,8 @@ class ColumnSelectSubFrame(Frame):
         for p in self.parsers:
             result.update(p)
 
-        available = sorted(result.keys())
+        self.original = result.keys()
+        available = sorted(self.original)
 
         raw = set(self.config.get('columns', []))
         raw = raw.intersection(set(available))

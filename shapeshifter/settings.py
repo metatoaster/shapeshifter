@@ -93,6 +93,7 @@ class AppConfig(BaseConfig):
 
     _valid_keys = {
         'cwd': basestring,
+        'csvfile': basestring,
         'lastparsed': list,
         'columns': list,
     }
