@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: shapeshifter
-Version: 0.7
+Version: 0.8
 Summary: Shapeshifter (?) Parser?
 Home-page: http://metatoaster.com/
 Author: Tommy Yu
@@ -39,6 +39,18 @@ Description: Shapeshifter Log to CSV Converter
         came along with it.  Again this started out as a five line script, so
         there are no tests for it, therefore this program doesn't really exist
         until some brave soul decides to write one for it.
+        
+        Version 0.8
+        ===========
+        
+        - Retain names of files opened and the saved csv file location.
+        - Ordering of column is now once again based on input file.  Sort for
+          display only.
+        
+        Version 0.7
+        ===========
+        
+        - Bugfix for Windows version of Tkinter
         
         Version 0.6
         ===========
