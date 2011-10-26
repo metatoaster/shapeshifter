@@ -1,3 +1,15 @@
+Version 0.8
+===========
+
+- Retain names of files opened and the saved csv file location.
+- Ordering of column is now once again based on input file.  Sort for
+  display only.
+
+Version 0.7
+===========
+
+- Bugfix for Windows version of Tkinter
+
 Version 0.6
 ===========
 
